@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+
+require_relative 'lib/environment'
+Environment.environment = ENV["DB"] || "development"
+
+require_relative 'lib/router'
+
+def clean_gets
+  (gets || "").chomp
+end
+
+puts "welcome to dj list"
+
+songs_controller = SongsController.new()
+songs_controller.welcome
