@@ -62,7 +62,7 @@ class SongsController
     when "title"
       puts "enter song title"
       title = clean_gets
-      song.update(song: song)
+      song.update(song: title)
     end
   end
 
@@ -123,7 +123,7 @@ class SongsController
     key = clean_gets
     results = Song.where(key: key, bpm: bpm)
     results.each do |song|
-      puts "#{song.bpm} #{song.key} #{song.artist} #{song.song}"
+      puts "#{song.bpm} #{song.key} #{song.artist} #{song.song} #{results.index(song)}"
     end
     puts "transpose? y/n"
     q = clean_gets
@@ -139,7 +139,7 @@ class SongsController
     artist = clean_gets
     results = Song.where(artist: artist)
     results.each do |song|
-      puts "#{song.bpm} #{song.key} #{song.artist} #{song.song}"
+      puts "#{song.bpm} #{song.key} #{song.artist} #{song.song} #{results.index(song)}"
     end
     puts "transpose? y/n"
     q = clean_gets
@@ -183,10 +183,10 @@ class SongsController
     puts "transpose up or down?"
     direction = clean_gets
     if direction == "up"
-      key = array[i + 1]
-      bpm = (bpm * 1.06).floor()
+      i == 11 ? key = array[0] : key = array[i + 1]
+      bpm = (bpm.to_i * 1.06).floor()
     else
-      key = array[i-1]
+      i == 0 ? key = array[11] : key = array[i-1]
       bpm = (bpm.to_i/1.06).floor()
     end
     results = Song.where(key: key, bpm: bpm)
