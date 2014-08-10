@@ -1,8 +1,92 @@
 class SongsController
 
   def welcome
-    puts "type 'bpm', 'key', 'artist', 'song', or 'exit'"
+    puts "type add, update, search, or delete"
+    choice = clean_gets
+    case choice
+      when "add"
+        add()
+      when "update"
+        update()
+      when "search"
+        search()
+      when "delete"
+        delete()
+    end
+  end
 
+  def add
+    puts "add a song"
+    puts "enter song"
+    song = clean_gets
+    puts "enter bpm"
+    bpm = clean_gets
+    puts "enter key"
+    key = clean_gets
+    puts "enter artist"
+    artist = clean_gets
+    puts "enter secondary key, if applicable"
+    key2 = clean_gets
+    puts "enter bside bpm, if applicable"
+    bside = clean_gets
+    Song.create(song: song, bpm: bpm, key: key, artist: artist, key2: key2, bside: bside)
+    puts "#{song} has been added to the list of songs"
+    welcome()
+  end
+
+  def update
+    puts "enter name of song to update"
+    name = clean_gets
+    song = Song.find_by(song: name)
+    if song
+      puts "#{song.bpm} #{song.key} #{song.artist} #{song.song}"
+    else
+      puts "hmm...can't find it"
+    end
+    puts "choose what to update"
+    puts "type either bpm, key, artist, or title"
+    choice = clean_gets
+    case choice
+    when "bpm"
+      puts "enter bpm"
+      bpm = clean_gets
+      song.update(bpm: bpm)
+    when "key"
+      puts "enter key"
+      key = clean_gets
+      song.update(key: key)
+    when "artist"
+      puts "enter artist"
+      artist = clean_gets
+      song.update(artist: artist)
+    when "title"
+      puts "enter song title"
+      title = clean_gets
+      song.update(song: song)
+    end
+  end
+
+  def delete
+    puts "type name of song to delete"
+    name = clean_gets
+    song = Song.find_by(song: name)
+    if song
+      puts "#{song.bpm} #{song.key} #{song.artist} #{song.song}"
+    else
+      puts "hmm...can't find it"
+    end
+    puts "sure you want to delete #{song.song}? y/n"
+    choice = clean_gets
+    if choice == "y"
+      song.destroy
+      welcome()
+    else
+      welcome()
+    end
+  end
+
+  def search
+    puts "type 'bpm', 'key', 'artist', 'song', or 'exit'"
     choice = clean_gets
     case choice
       when "bpm"
