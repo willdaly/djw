@@ -1,7 +1,7 @@
 class SongsController
 
   def welcome
-    puts "type add, update, search, or delete"
+    puts "type add, update, search, delete, or exit"
     choice = clean_gets
     case choice
       when "add"
@@ -101,69 +101,58 @@ class SongsController
   end
 
   def bpm
-    puts "what bpm do you want to find?"
-    bpm = clean_gets
-    results = Song.find_by_sql("SELECT * FROM songs WHERE bpm = #{bpm}")
+    puts "enter lowest bpm"
+    lowbpm = clean_gets
+    puts "enter highest bpm"
+    highbpm = clean_gets
+    results = Song.where(bpm: lowbpm..highbpm).order('bpm ASC, key ASC')
+    # results = Song.where(["bpm >= ?", "#{lowbpm}"]).where(["bpm <= ?", "#{highbpm}"]).order('bpm ASC, key ASC')
     results.each do |song|
       puts "#{song.bpm} #{song.key} #{song.artist} #{song.song}"
     end
     puts "transpose? y/n"
     q = clean_gets
-    if q == "y"
-      transpose()
-    else
-      welcome()
-    end
+    q == "y" ? transpose() : welcome()
   end
 
   def key
-    puts "enter bpm"
-    bpm = clean_gets
+    puts "enter low bpm"
+    lowbpm = clean_gets
+    puts "enter high bpm"
+    highbpm = clean_gets
     puts "enter key"
     key = clean_gets
-    results = Song.where(key: key, bpm: bpm)
+    results = Song.where(key: key, bpm: lowbpm..highbpm).order('bpm ASC, key ASC')
     results.each do |song|
       puts "#{song.bpm} #{song.key} #{song.artist} #{song.song} #{results.index(song)}"
     end
     puts "transpose? y/n"
     q = clean_gets
-    if q == "y"
-      transpose()
-    else
-      welcome()
-    end
+    q == "y" ? transpose() : welcome()
   end
 
   def artist
     puts "what artist do you want to find?"
     artist = clean_gets
-    results = Song.where(artist: artist)
+    results = Song.where(["artist= ?", "#{artist}"]).order('bpm ASC, key ASC')
     results.each do |song|
       puts "#{song.bpm} #{song.key} #{song.artist} #{song.song} #{results.index(song)}"
     end
     puts "transpose? y/n"
     q = clean_gets
-    if q == "y"
-      transpose()
-    else
-      welcome()
-    end
+    q == "y" ? transpose() : welcome()
   end
 
   def song
     puts "what song do you want to find?"
     song = clean_gets
-    results = Song.where(song: song)
+    results = Song.where(song: song).order('bpm ASC, key ASC')
     results.each do |song|
       puts "#{song.bpm} #{song.key} #{song.artist} #{song.song}"
     end
     puts "transpose? y/n"
     q = clean_gets
-    if q == "y"
-      transpose()
-    else
-      welcome()
-    end
+    q == "y" ? transpose() : welcome()
   end
 
   def transpose
@@ -189,7 +178,7 @@ class SongsController
       i == 0 ? key = array[11] : key = array[i-1]
       bpm = (bpm.to_i/1.06).floor()
     end
-    results = Song.where(key: key, bpm: bpm)
+    results = Song.where(key: key, bpm: bpm).order('bpm ASC, key ASC')
     results.each do |song|
       puts "#{song.bpm} #{song.key} #{song.artist} #{song.song}"
     end
