@@ -11,15 +11,26 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140808091800) do
+ActiveRecord::Schema.define(version: 20140811122100) do
 
-  create_table "songs", force: true do |t|
+  create_table "missing_songs", force: true do |t|
     t.string  "artist"
-    t.string  "song"
+    t.string  "title"
     t.integer "bpm"
     t.string  "key"
     t.string  "key2"
     t.string  "bside"
+    t.integer "songs_id"
+  end
+
+  create_table "songs", force: true do |t|
+    t.string  "artist"
+    t.string  "title"
+    t.integer "bpm"
+    t.string  "key"
+    t.string  "key2"
+    t.string  "bside"
+    t.integer "missing_songs_id"
   end
 
 end

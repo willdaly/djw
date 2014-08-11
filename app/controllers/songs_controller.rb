@@ -29,17 +29,17 @@ class SongsController
     key2 = clean_gets
     puts "enter bside bpm, if applicable"
     bside = clean_gets
-    Song.create(song: song, bpm: bpm, key: key, artist: artist, key2: key2, bside: bside)
-    puts "#{song} has been added to the list of songs"
+    Song.create(title: song, bpm: bpm, key: key, artist: artist, key2: key2, bside: bside)
+    puts "#{song} added to songs"
     welcome()
   end
 
   def update
     puts "enter name of song to update"
     name = clean_gets
-    song = Song.find_by(song: name)
+    song = Song.find_by(title: name)
     if song
-      puts "#{song.bpm} #{song.key} #{song.artist} #{song.song}"
+      puts "#{song.bpm} #{song.key} #{song.artist} #{song.title}"
     else
       puts "hmm...can't find it"
     end
@@ -69,13 +69,13 @@ class SongsController
   def delete
     puts "type name of song to delete"
     name = clean_gets
-    song = Song.find_by(song: name)
+    song = Song.find_by(title: name)
     if song
-      puts "#{song.bpm} #{song.key} #{song.artist} #{song.song}"
+      puts "#{song.bpm} #{song.key} #{song.artist} #{song.title}"
     else
       puts "hmm...can't find it"
     end
-    puts "sure you want to delete #{song.song}? y/n"
+    puts "sure you want to delete #{song.title}? y/n"
     choice = clean_gets
     if choice == "y"
       song.destroy
@@ -108,11 +108,9 @@ class SongsController
     results = Song.where(bpm: lowbpm..highbpm).order('bpm ASC, key ASC')
     # results = Song.where(["bpm >= ?", "#{lowbpm}"]).where(["bpm <= ?", "#{highbpm}"]).order('bpm ASC, key ASC')
     results.each do |song|
-      puts "#{song.bpm} #{song.key} #{song.artist} #{song.song}"
+      puts "#{song.bpm} #{song.key} #{song.artist} #{song.title}"
     end
-    puts "transpose? y/n"
-    q = clean_gets
-    q == "y" ? transpose() : welcome()
+    transpose()
   end
 
   def key
@@ -124,11 +122,9 @@ class SongsController
     key = clean_gets
     results = Song.where(key: key, bpm: lowbpm..highbpm).order('bpm ASC, key ASC')
     results.each do |song|
-      puts "#{song.bpm} #{song.key} #{song.artist} #{song.song} #{results.index(song)}"
+      puts "#{song.bpm} #{song.key} #{song.artist} #{song.title} #{results.index(song)}"
     end
-    puts "transpose? y/n"
-    q = clean_gets
-    q == "y" ? transpose() : welcome()
+    transpose()
   end
 
   def artist
@@ -136,52 +132,68 @@ class SongsController
     artist = clean_gets
     results = Song.where(["artist= ?", "#{artist}"]).order('bpm ASC, key ASC')
     results.each do |song|
-      puts "#{song.bpm} #{song.key} #{song.artist} #{song.song} #{results.index(song)}"
+      puts "#{song.bpm} #{song.key} #{song.artist} #{song.title} #{results.index(song)}"
     end
-    puts "transpose? y/n"
-    q = clean_gets
-    q == "y" ? transpose() : welcome()
+    transpose()
   end
 
   def song
     puts "what song do you want to find?"
     song = clean_gets
-    results = Song.where(song: song).order('bpm ASC, key ASC')
-    results.each do |song|
-      puts "#{song.bpm} #{song.key} #{song.artist} #{song.song}"
+    results = Song.where(title: song).order('bpm ASC, key ASC')
+    if results.exists?
+      results.each do |song|
+        puts "#{song.bpm} #{song.key} #{song.artist} #{song.title}"
+      end
+      transpose()
+    else
+      puts "couldn't find #{song}. do you want to add it to missing? y/n"
+      response = clean_gets
+      if response == "y"
+        puts "enter artist"
+        artist = clean_gets
+        Missing_Song.create(title: song, artist: artist)
+        puts "#{song} by #{artist} added to missing songs"
+      else
+        welcome()
+      end
     end
-    puts "transpose? y/n"
-    q = clean_gets
-    q == "y" ? transpose() : welcome()
   end
 
   def transpose
-    puts "enter bpm"
-    bpm = clean_gets
-    puts "enter key"
-    key = clean_gets
-    array = []
-    i = 0
-    if key[-1] == "M"
-      array = ["AbM", "AM", "BbM", "BM", "CM", "DM", "EbM", "EM", "FM", "F#M", "GM"]
-      i = array.index(key)
+    puts "transpose? y/n"
+    q = clean_gets
+    if q == "y"
+      puts "enter bpm"
+      bpm = clean_gets
+      puts "enter key"
+      key = clean_gets
+      array = []
+      i = 0
+      if key[-1] == "M"
+        array = ["AbM", "AM", "BbM", "BM", "CM", "DM", "EbM", "EM", "FM", "F#M", "GM"]
+        i = array.index(key)
+      else
+        array = ["abm", "am", "bbm", "bm", "cm", "c#m", "dm", "ebm", "em", "fm", "f#m", "gm"]
+        i = array.index(key)
+      end
+      puts "transpose up or down?"
+      direction = clean_gets
+      if direction == "up"
+        i == 11 ? key = array[0] : key = array[i + 1]
+        bpm = (bpm.to_i * 1.06).floor()
+      else
+        i == 0 ? key = array[11] : key = array[i-1]
+        bpm = (bpm.to_i/1.06).floor()
+      end
+      results = Song.where(key: key, bpm: bpm).order('bpm ASC, key ASC')
+      results.each do |song|
+        puts "#{song.bpm} #{song.key} #{song.artist} #{song.title}"
+      end
     else
-      array = ["abm", "am", "bbm", "bm", "cm", "c#m", "dm", "ebm", "em", "fm", "f#m", "gm"]
-      i = array.index(key)
+      welcome()
     end
-    puts "transpose up or down?"
-    direction = clean_gets
-    if direction == "up"
-      i == 11 ? key = array[0] : key = array[i + 1]
-      bpm = (bpm.to_i * 1.06).floor()
-    else
-      i == 0 ? key = array[11] : key = array[i-1]
-      bpm = (bpm.to_i/1.06).floor()
-    end
-    results = Song.where(key: key, bpm: bpm).order('bpm ASC, key ASC')
-    results.each do |song|
-      puts "#{song.bpm} #{song.key} #{song.artist} #{song.song}"
-    end
+
   end
 
   private
