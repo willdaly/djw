@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140811122100) do
+ActiveRecord::Schema.define(version: 20140812095100) do
 
   create_table "missing_songs", force: true do |t|
     t.string  "artist"
@@ -23,6 +23,11 @@ ActiveRecord::Schema.define(version: 20140811122100) do
     t.integer "songs_id"
   end
 
+  create_table "playlists", force: true do |t|
+    t.string  "playlistname"
+    t.integer "songs_id"
+  end
+
   create_table "songs", force: true do |t|
     t.string  "artist"
     t.string  "title"
@@ -31,6 +36,7 @@ ActiveRecord::Schema.define(version: 20140811122100) do
     t.string  "key2"
     t.string  "bside"
     t.integer "missing_songs_id"
+    t.integer "playlists_id"
   end
 
 end

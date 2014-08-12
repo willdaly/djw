@@ -1,7 +1,7 @@
 class SongsController
 
   def welcome
-    puts "type add, update, search, delete, or exit"
+    puts "type add, update, search, delete, add to playlist, or exit"
     choice = clean_gets
     case choice
       when "add"
@@ -12,6 +12,8 @@ class SongsController
         search()
       when "delete"
         delete()
+      when "add to playlist"
+        add_to_playlist()
     end
   end
 
@@ -30,7 +32,7 @@ class SongsController
     puts "enter bside bpm, if applicable"
     bside = clean_gets
     Song.create(title: song, bpm: bpm, key: key, artist: artist, key2: key2, bside: bside)
-    puts "#{song} added to songs"
+    puts "#{song} by #{artist} added to songs"
     welcome()
   end
 
@@ -73,12 +75,13 @@ class SongsController
     if song
       puts "#{song.bpm} #{song.key} #{song.artist} #{song.title}"
     else
-      puts "hmm...can't find it"
+      puts "can not find #{name}"
     end
-    puts "sure you want to delete #{song.title}? y/n"
+    puts "Delete #{song.title}? y/n"
     choice = clean_gets
     if choice == "y"
       song.destroy
+      puts "#{name} deleted"
       welcome()
     else
       welcome()
@@ -193,7 +196,20 @@ class SongsController
     else
       welcome()
     end
+  end
 
+  def add_to_playlist
+    puts "here are your existing playlists"
+    PlaylistsController.new().specialist()
+    puts "enter name of playlist to add to"
+    playlistname = clean_gets
+    playlist = Playlist.find_by(playlistname: playlistname)
+    puts "enter song title to add to #{playlist.playlistname}"
+    title = clean_gets
+    song = Song.find_by(title: title)
+    song.update(playlists_id: playlist.id)
+    puts "#{song.title} added to #{playlist.playlistname}"
+    welcome()
   end
 
   private

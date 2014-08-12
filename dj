@@ -10,6 +10,5 @@ def clean_gets
 end
 
 puts "welcome to dj list"
-
-songs_controller = SongsController.new()
-songs_controller.welcome
+router = Router.new()
+router.welcome()
