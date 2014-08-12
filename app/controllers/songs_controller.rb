@@ -15,7 +15,7 @@ class SongsController
       when "add to playlist"
         add_to_playlist()
       when "main menu"
-        Router.new().welcome()    
+        Router.new().welcome()
     end
   end
 
@@ -35,7 +35,9 @@ class SongsController
     bside = clean_gets
     Song.create(title: song, bpm: bpm, key: key, artist: artist, key2: key2, bside: bside)
     puts "#{song} by #{artist} added to songs"
-    welcome()
+    puts "add another song? y/n"
+    response = clean_gets
+    response == "y" ? add() : welcome()
   end
 
   def update
@@ -45,7 +47,9 @@ class SongsController
     if song
       puts "#{song.bpm} #{song.key} #{song.artist} #{song.title}"
     else
-      puts "hmm...can't find it"
+      puts "can't find #{name}. search again? y/n"
+      answer = clean_gets
+      answer == "y" ? update() : welcome()
     end
     puts "choose what to update"
     puts "type either bpm, key, artist, or title"
@@ -67,6 +71,10 @@ class SongsController
       puts "enter song title"
       title = clean_gets
       song.update(song: title)
+    else
+      puts "#{choice} isn't a valid choice. try again? y/n"
+      response = clean_gets
+      response == "y" ? update() : welcome()
     end
   end
 
@@ -165,40 +173,62 @@ class SongsController
     end
   end
 
-  def transpose
-    puts "transpose? y/n"
-    q = clean_gets
-    if q == "y"
-      puts "enter bpm"
-      bpm = clean_gets
-      puts "enter key"
-      key = clean_gets
-      array = []
-      i = 0
-      if key[-1] == "M"
-        array = ["AbM", "AM", "BbM", "BM", "CM", "DM", "EbM", "EM", "FM", "F#M", "GM"]
-        i = array.index(key)
-      else
-        array = ["abm", "am", "bbm", "bm", "cm", "c#m", "dm", "ebm", "em", "fm", "f#m", "gm"]
-        i = array.index(key)
-      end
+def transpose
+  puts "transpose? y/n"
+  q = clean_gets
+  if q == "y"
+    puts "enter bpm"
+    bpm = clean_gets
+    puts "enter key"
+    key = clean_gets
+    array = []
+    i = 0
+    if key[-1] == "M"
+      array = ["AbM", "AM", "BbM", "BM", "CM", "DM", "EbM", "EM", "FM", "F#M", "GM"]
+      i = array.index(key)
+    else
+      array = ["abm", "am", "bbm", "bm", "cm", "c#m", "dm", "ebm", "em", "fm", "f#m", "gm"]
+      i = array.index(key)
+    end
       puts "transpose up or down?"
       direction = clean_gets
-      if direction == "up"
-        i == 11 ? key = array[0] : key = array[i + 1]
-        bpm = (bpm.to_i * 1.06).floor()
-      else
-        i == 0 ? key = array[11] : key = array[i-1]
-        bpm = (bpm.to_i/1.06).floor()
-      end
-      results = Song.where(key: key, bpm: bpm).order('bpm ASC, key ASC')
+      lowbpm = 0
+      highbpm = 0
+    if direction == "up"
+      i == 11 ? key = array[0] : key = array[i + 1]
+      lowbpm = (bpm.to_i * 1.06).floor()
+      highbpm = (bpm.to_i * 1.06).ceil()
+    else
+      i == 0 ? key = array[11] : key = array[i-1]
+      lowbpm = (bpm.to_i/1.06).floor()
+      highbpm = (bpm.to_i/1.06).ceil()
+    end
+    results = Song.where(key: key, bpm: lowbpm..highbpm).order('bpm ASC, key ASC')
+    if results.exists?
       results.each do |song|
         puts "#{song.bpm} #{song.key} #{song.artist} #{song.title}"
       end
     else
+      puts "no results found"
       welcome()
     end
+  else
+    welcome()
   end
+  puts "type transpose again, add to playlist, or menu"
+  response = clean_gets
+  case response
+    when "transpose again"
+      transpose()
+    when "add to playlist"
+      add_to_playlist()
+    when "menu"
+      welcome()
+  # else
+  #   puts "#{reponse} isn't valid."
+  #   welcome()
+    end
+end
 
   def add_to_playlist
     puts "here are your existing playlists"
@@ -206,12 +236,26 @@ class SongsController
     puts "enter name of playlist to add to"
     playlistname = clean_gets
     playlist = Playlist.find_by(playlistname: playlistname)
-    puts "enter song title to add to #{playlist.playlistname}"
-    title = clean_gets
-    song = Song.find_by(title: title)
-    song.update(playlists_id: playlist.id)
-    puts "#{song.title} added to #{playlist.playlistname}"
-    welcome()
+    if Playlist.exists?(playlistname: playlistname)
+      puts "enter song title to add to #{playlist.playlistname}"
+      title = clean_gets
+      song = Song.find_by(title: title)
+      # song.update(playlists_id: playlist.id)
+      JoinsController.new().add(song.id, playlist.id)
+      puts "#{song.title} added to #{playlist.playlistname}"
+      puts "add more? y/n"
+      answer = clean_gets
+      answer == "y" ? add_to_playlist() : welcome()
+    else
+      puts "no playlist called #{playlistname}. Do you want to make one? y/n"
+      response = clean_gets
+      if response == "y"
+        Playlist.create(playlistname: playlistname)
+        welcome()
+      else
+        welcome()
+      end
+    end
   end
 
   private

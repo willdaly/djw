@@ -13,6 +13,12 @@
 
 ActiveRecord::Schema.define(version: 20140812095100) do
 
+  create_table "joins", force: true do |t|
+    t.integer "playorder"
+    t.integer "songs_id"
+    t.integer "playlists_id"
+  end
+
   create_table "missing_songs", force: true do |t|
     t.string  "artist"
     t.string  "title"
