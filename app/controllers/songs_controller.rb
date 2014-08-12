@@ -1,7 +1,7 @@
 class SongsController
 
   def welcome
-    puts "type add, update, search, delete, add to playlist, or exit"
+    puts "type add, update, search, delete, add to playlist, main menu, or exit"
     choice = clean_gets
     case choice
       when "add"
@@ -14,6 +14,8 @@ class SongsController
         delete()
       when "add to playlist"
         add_to_playlist()
+      when "main menu"
+        Router.new().welcome()    
     end
   end
 

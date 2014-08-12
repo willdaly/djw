@@ -1,7 +1,7 @@
 class MissingSongsController
 
   def welcome
-    puts "type list, add, complete, delete, or exit"
+    puts "type list, add, complete, delete, main menu, or exit"
     choice = clean_gets
     case choice
     when "list"
@@ -12,6 +12,8 @@ class MissingSongsController
         complete()
       when "delete"
         delete()
+      when "main menu"
+        Router.new().welcome()
     end
   end
 
