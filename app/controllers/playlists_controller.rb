@@ -17,9 +17,10 @@ class PlaylistsController
   end
 
   def list()
-    playlists.each do |playlist|
-      puts "#{playlist.id} #{playlist.playlistname}"
-    end
+    tp playlists
+    # playlists.each do |playlist|
+    #   puts "#{playlist.id} #{playlist.playlistname}"
+    # end
     puts "type index of playlist to view"
     index = clean_gets
     # view(index)

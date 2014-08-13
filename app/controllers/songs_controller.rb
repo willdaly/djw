@@ -120,9 +120,10 @@ class SongsController
     highbpm = clean_gets
     results = Song.where(bpm: lowbpm..highbpm).order('bpm ASC, key ASC')
     # results = Song.where(["bpm >= ?", "#{lowbpm}"]).where(["bpm <= ?", "#{highbpm}"]).order('bpm ASC, key ASC')
-    results.each do |song|
-      puts "#{song.bpm} #{song.key} #{song.artist} #{song.title}"
-    end
+    tp results
+    # results.each do |song|
+      # puts "#{song.bpm} #{song.key} #{song.artist} #{song.title}"
+    # end
     transpose()
   end
 
@@ -134,9 +135,10 @@ class SongsController
     puts "enter key"
     key = clean_gets
     results = Song.where(key: key, bpm: lowbpm..highbpm).order('bpm ASC, key ASC')
-    results.each do |song|
-      puts "#{song.bpm} #{song.key} #{song.artist} #{song.title} #{results.index(song)}"
-    end
+    tp results
+    # results.each do |song|
+    #   puts "#{song.bpm} #{song.key} #{song.artist} #{song.title} #{results.index(song)}"
+    # end
     transpose()
   end
 
@@ -144,9 +146,10 @@ class SongsController
     puts "what artist do you want to find?"
     artist = clean_gets
     results = Song.where(["artist= ?", "#{artist}"]).order('bpm ASC, key ASC')
-    results.each do |song|
-      puts "#{song.bpm} #{song.key} #{song.artist} #{song.title} #{results.index(song)}"
-    end
+    tp results
+    # results.each do |song|
+    #   puts "#{song.bpm} #{song.key} #{song.artist} #{song.title} #{results.index(song)}"
+    # end
     transpose()
   end
 
@@ -155,9 +158,10 @@ class SongsController
     song = clean_gets
     results = Song.where(title: song).order('bpm ASC, key ASC')
     if results.exists?
-      results.each do |song|
-        puts "#{song.bpm} #{song.key} #{song.artist} #{song.title}"
-      end
+      tp results
+      # results.each do |song|
+      #   puts "#{song.bpm} #{song.key} #{song.artist} #{song.title}"
+      # end
       transpose()
     else
       puts "couldn't find #{song}. do you want to add it to missing? y/n"
@@ -205,9 +209,10 @@ def transpose
     end
     results = Song.where(key: key, bpm: lowbpm..highbpm).order('bpm ASC, key ASC')
     if results.exists?
-      results.each do |song|
-        puts "#{song.bpm} #{song.key} #{song.artist} #{song.title}"
-      end
+      tp results
+      # results.each do |song|
+      #   puts "#{song.bpm} #{song.key} #{song.artist} #{song.title}"
+      # end
     else
       puts "no results found"
       welcome()

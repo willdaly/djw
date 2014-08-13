@@ -18,9 +18,10 @@ class MissingSongsController
   end
 
   def list
-    songs.each do |song|
-      puts "#{song.artist} #{song.title}"
-    end
+    tp songs
+    # songs.each do |song|
+    #   puts "#{song.artist} #{song.title}"
+    # end
     puts "complete? y/n"
     response = clean_gets
     if response == "y"
