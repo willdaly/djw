@@ -17,7 +17,7 @@ class PlaylistsController
   end
 
   def list()
-    tp playlists
+    tp playlists, :id, :playlistname
     # playlists.each do |playlist|
     #   puts "#{playlist.id} #{playlist.playlistname}"
     # end
@@ -43,18 +43,18 @@ class PlaylistsController
     end
   end
 
-  def view(playlists_id)
-    Song.where(playlists_id: playlists_id).each do |song|
-      puts "#{song.bpm} #{song.key} #{song.title} #{song.artist} #{song.id}"
-    end
-    puts "remove song from playlist? y/n"
-    choice = clean_gets
-    if choice == "y"
-      remove()
-    else
-      welcome()
-    end
-  end
+  # def view(playlists_id)
+  #   Song.where(playlists_id: playlists_id).each do |song|
+  #     puts "#{song.bpm} #{song.key} #{song.title} #{song.artist} #{song.id}"
+  #   end
+  #   puts "remove song from playlist? y/n"
+  #   choice = clean_gets
+  #   if choice == "y"
+  #     remove()
+  #   else
+  #     welcome()
+  #   end
+  # end
 
 
 

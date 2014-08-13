@@ -120,7 +120,7 @@ class SongsController
     highbpm = clean_gets
     results = Song.where(bpm: lowbpm..highbpm).order('bpm ASC, key ASC')
     # results = Song.where(["bpm >= ?", "#{lowbpm}"]).where(["bpm <= ?", "#{highbpm}"]).order('bpm ASC, key ASC')
-    tp results
+    tp results, :id, :artist, :title, :bpm, :key
     # results.each do |song|
       # puts "#{song.bpm} #{song.key} #{song.artist} #{song.title}"
     # end
@@ -135,7 +135,7 @@ class SongsController
     puts "enter key"
     key = clean_gets
     results = Song.where(key: key, bpm: lowbpm..highbpm).order('bpm ASC, key ASC')
-    tp results
+    tp results, :id, :artist, :title, :bpm, :key
     # results.each do |song|
     #   puts "#{song.bpm} #{song.key} #{song.artist} #{song.title} #{results.index(song)}"
     # end
@@ -146,7 +146,7 @@ class SongsController
     puts "what artist do you want to find?"
     artist = clean_gets
     results = Song.where(["artist= ?", "#{artist}"]).order('bpm ASC, key ASC')
-    tp results
+    tp results, :id, :artist, :title, :bpm, :key
     # results.each do |song|
     #   puts "#{song.bpm} #{song.key} #{song.artist} #{song.title} #{results.index(song)}"
     # end
@@ -158,7 +158,7 @@ class SongsController
     song = clean_gets
     results = Song.where(title: song).order('bpm ASC, key ASC')
     if results.exists?
-      tp results
+      tp results, :id, :artist, :title, :bpm, :key
       # results.each do |song|
       #   puts "#{song.bpm} #{song.key} #{song.artist} #{song.title}"
       # end
@@ -188,7 +188,7 @@ def transpose
     array = []
     i = 0
     if key[-1] == "M"
-      array = ["AbM", "AM", "BbM", "BM", "CM", "DM", "EbM", "EM", "FM", "F#M", "GM"]
+      array = ["AbM", "AM", "BbM", "BM", "CM", "C#M", "DM", "EbM", "EM", "FM", "F#M", "GM"]
       i = array.index(key)
     else
       array = ["abm", "am", "bbm", "bm", "cm", "c#m", "dm", "ebm", "em", "fm", "f#m", "gm"]
@@ -209,7 +209,7 @@ def transpose
     end
     results = Song.where(key: key, bpm: lowbpm..highbpm).order('bpm ASC, key ASC')
     if results.exists?
-      tp results
+      tp results, :id, :artist, :title, :bpm, :key
       # results.each do |song|
       #   puts "#{song.bpm} #{song.key} #{song.artist} #{song.title}"
       # end

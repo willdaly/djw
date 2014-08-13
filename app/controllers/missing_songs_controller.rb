@@ -18,7 +18,7 @@ class MissingSongsController
   end
 
   def list
-    tp songs
+    tp songs, :id, :artist, :title
     # songs.each do |song|
     #   puts "#{song.artist} #{song.title}"
     # end

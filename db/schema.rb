@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140812095100) do
+ActiveRecord::Schema.define(version: 20140813084800) do
 
   create_table "joins", force: true do |t|
     t.integer "playorder"
