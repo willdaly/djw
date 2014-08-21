@@ -1,18 +1,17 @@
 class Router
 
-  def welcome
-    puts "type songs, missing, or playlist"
+  def self.welcome
+    puts "type songs, search, missing, or playlist"
     choice = clean_gets
     case choice
       when "songs"
-        songs_controller = SongsController.new()
-        songs_controller.welcome
+        SongsController.welcome()
+      when "search"
+        SongsController.search()  
       when "missing"
-        missing_songs_controller = MissingSongsController.new()
-        missing_songs_controller.welcome()
+        MissingSongsController.welcome()
       when "playlist"
-        playlists_controller = PlaylistsController.new()
-        playlists_controller.welcome()
+        PlaylistsController.welcome()
     end
   end
 

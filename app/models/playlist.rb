@@ -1,4 +1,4 @@
 class Playlist < ActiveRecord::Base
-  has_many :songs
-  belongs_to :join
+  # has_many :songs
+  # belongs_to :join
 end

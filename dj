@@ -10,5 +10,4 @@ def clean_gets
 end
 
 puts "welcome to dj list"
-router = Router.new()
-router.welcome()
+Router.welcome()

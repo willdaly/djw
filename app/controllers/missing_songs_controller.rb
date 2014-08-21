@@ -1,52 +1,32 @@
 class MissingSongsController
 
-  def welcome
-    puts "type list, add, complete, delete, main menu, or exit"
-    choice = clean_gets
-    case choice
-    when "list"
-        list()
-      when "add"
-        add()
+  def self.welcome
+    tp Missing_Song.all
+    puts "type report-missing song name, complete-id, delete-id, main menu, or exit"
+    input = clean_gets.split("-")
+    case input[0]
+    when "report"
+        MissingSongsController.add(input[1])
       when "complete"
-        complete()
+        MissingSongsController.complete(input[1])
       when "delete"
-        delete()
+        MissingSongsController.delete(input[1])
       when "main menu"
-        Router.new().welcome()
+        Router.welcome()
     end
   end
 
-  def list
-    tp songs, :id, :artist, :title
-    # songs.each do |song|
-    #   puts "#{song.artist} #{song.title}"
-    # end
-    puts "complete? y/n"
-    response = clean_gets
-    if response == "y"
-      complete()
-    else
-      welcome()
-    end
-  end
-
-  def add
-    puts "report a missing song"
-    puts "enter title"
-    song = clean_gets
+  def self.add(title)
     puts "enter artist"
     artist = clean_gets
-    created = Missing_Song.create(title: song, artist: artist)
+    created = Missing_Song.create(title: title, artist: artist)
     puts "#{created.title} by #{created.artist} reported missing"
-    welcome()
+    MissingSongsController.welcome()
   end
 
-  def complete
-    puts "enter title of song to update"
-    title = clean_gets
-    song = Missing_Song.find_by(title: title)
-    if song
+  def self.complete(id)
+    song = Missing_Song.find_by(id: id)
+    if Missing_Song.where(id: id).exists?
       puts "#{song.artist} #{song.title}"
       puts "enter bpm"
       bpm = clean_gets
@@ -59,35 +39,33 @@ class MissingSongsController
       Song.create(title: song.title, bpm: bpm, key: key, artist: song.artist, key2: key2, bside: bside)
       song.destroy
       puts "#{song.title} by #{song.artist} added to songs and removed from missing songs"
-      welcome()
+      MissingSongsController.welcome()
     else
-      puts "can't find #{title}. Do you want to add it? y/n"
+      puts "can't find #{title}. Do you want to report it missing? y/n"
       response = clean_gets
       if response == "y"
         Song.add()
       else
-        welcome()
+        MissingSongsController.welcome()
       end
     end
   end
 
-  def delete()
-    puts "type song title to delete"
-    title = clean_gets
-    song = Missing_Song.find_by(title: title)
+  def self.delete(id)
+    song = Missing_Song.find_by(id: id)
     if song
       puts "#{song.artist} #{song.title}"
     else
-      puts "can not find #{title}"
+      puts "can not find it"
+      MissingSongsController.welcome()
     end
     puts "Delete #{song.title}? y/n"
     choice = clean_gets
     if choice == "y"
       song.destroy
-      puts "#{title} deleted"
-      welcome()
+      MissingSongsController.welcome()
     else
-      welcome()
+      MissingSongsController.welcome()
     end
   end
 
