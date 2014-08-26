@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140819145000) do
+ActiveRecord::Schema.define(version: 20140822111900) do
 
   create_table "joins", force: true do |t|
     t.integer "playorder"
@@ -20,13 +20,8 @@ ActiveRecord::Schema.define(version: 20140819145000) do
   end
 
   create_table "missing_songs", force: true do |t|
-    t.string  "artist"
-    t.string  "title"
-    t.integer "bpm"
-    t.string  "key"
-    t.string  "key2"
-    t.string  "bside"
-    t.integer "songs_id"
+    t.string "artist"
+    t.string "title"
   end
 
   create_table "playlists", force: true do |t|
@@ -40,6 +35,7 @@ ActiveRecord::Schema.define(version: 20140819145000) do
     t.string  "key"
     t.string  "key2"
     t.string  "bside"
+    t.string  "genre"
   end
 
 end

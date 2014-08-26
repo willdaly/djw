@@ -20,23 +20,23 @@ class SongsController
   end
 
   def self.submenu()
-    puts "type add to playlist-id, transpose-id, search again, or menu"
-    input = clean_gets.split("-")
+    puts "type add to playlist;id, transpose;id, search again, or menu"
+    input = clean_gets.split(";")
     case input[0]
       when "add to playlist"
         add_to_playlist(input[1])
       when "transpose"
         SongsController.transpose(input[1])
       when "search again"
-        SongsController.search()  
+        SongsController.search()
       when "menu"
         SongsController.welcome()
     end
   end
 
   def self.add
-    puts "enter song title-artist-bpm-key"
-    input = clean_gets.split("-")
+    puts "enter song title;artist;bpm;key"
+    input = clean_gets.split(";")
     puts "enter secondary key, if applicable"
     key2 = clean_gets
     puts "enter bside bpm, if applicable"
@@ -110,8 +110,8 @@ class SongsController
   end
 
   def self.search
-    puts "type 'bpm-lowbpm-highbpm', 'key-lowbpm-highbpm-key', 'artist-artistname', 'song-songname', or 'exit'"
-    input = clean_gets.split("-")
+    puts "type 'bpm;lowbpm;highbpm', 'key;lowbpm;highbpm;key', 'artist;artistname', 'song;songname', or 'exit'"
+    input = clean_gets.split(";")
     case input[0]
       when "bpm"
         SongsController.bpm(input[1], input[2])
@@ -131,7 +131,10 @@ class SongsController
   end
 
   def self.key(lowbpm, highbpm, key)
-    results = Song.where(key: key, bpm: lowbpm..highbpm).order('bpm ASC, key ASC')
+    length = key.length
+    i = length - 1
+    ambigkey = key[0...i]
+    results = Song.where(key: [key, ambigkey], bpm: lowbpm..highbpm).order('bpm ASC, key ASC')
     tp results
     SongsController.submenu()
   end
