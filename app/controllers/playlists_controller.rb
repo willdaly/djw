@@ -16,14 +16,14 @@ class PlaylistsController
     end
   end
 
-  def add(name)
+  def self.add(name)
     Playlist.create(playlistname: name)
     puts "#{name} created"
     PlaylistsController.welcome()
   end
 
-  def delete(id)
-    JoinsController.view(id)
+  def self.delete(id)
+    # JoinsController.view(id)
     playlist = Playlist.find_by(id: id)
     puts "are you sure you want to delete #{playlist.playlistname}? y/n"
     choice = clean_gets

@@ -200,7 +200,7 @@ def self.transpose(id)
   puts "transpose again? y/n"
   response = clean_gets
   if response == "y"
-    transpose()
+    transpose(id)
   else
     SongsController.submenu()
   end
