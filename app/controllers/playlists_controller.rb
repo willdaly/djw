@@ -3,7 +3,7 @@ class PlaylistsController
   def self.welcome
     tp Playlist.all
     puts "type view-id, add-playlist name, delete-id, or main menu"
-    input = clean_gets.split('-')
+    input = STDIN.gets.chomp.split('-')
     case input[0]
       when "view"
         JoinsController.view(input[1])
@@ -26,7 +26,7 @@ class PlaylistsController
     # JoinsController.view(id)
     playlist = Playlist.find_by(id: id)
     puts "are you sure you want to delete #{playlist.playlistname}? y/n"
-    choice = clean_gets
+    choice = STDIN.gets.chomp
     if choice == "y"
       playlist.destroy
       PlaylistsController.welcome()

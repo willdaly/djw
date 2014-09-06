@@ -2,7 +2,7 @@ class SongsController
 
   def self.welcome
     puts "type add, update, search, delete, main menu, or exit"
-    choice = clean_gets
+    choice = STDIN.gets.chomp
     case choice
       when "add"
         SongsController.add()
@@ -21,7 +21,7 @@ class SongsController
 
   def self.submenu()
     puts "type add to playlist;id, transpose;id, search again, or menu"
-    input = clean_gets.split(";")
+    input = STDIN.gets.chomp.split(";")
     case input[0]
       when "add to playlist"
         add_to_playlist(input[1])
@@ -36,62 +36,62 @@ class SongsController
 
   def self.add
     puts "enter song title;artist;bpm;key"
-    input = clean_gets.split(";")
+    input = STDIN.gets.chomp.split(";")
     puts "enter secondary key, if applicable"
-    key2 = clean_gets
+    key2 = STDIN.gets.chomp
     puts "enter bside bpm, if applicable"
-    bside = clean_gets
+    bside = STDIN.gets.chomp
     Song.create(title: input[0], bpm: input[2], key: input[3], artist: input[1], key2: key2, bside: bside)
     puts "#{input[0]} by #{input[1]} added to songs"
     puts "add another song? y/n"
-    response = clean_gets
+    response = STDIN.gets.chomp
     response == "y" ? add() : SongsController.welcome()
   end
 
   def self.update
     puts "enter name of song to update"
-    name = clean_gets
+    name = STDIN.gets.chomp
     song = Song.find_by(title: name)
     if song
       puts "#{song.bpm} #{song.key} #{song.artist} #{song.title}"
     else
       puts "can't find #{name}. search again? y/n"
-      answer = clean_gets
+      answer = STDIN.gets.chomp
       answer == "y" ? update() : SongsController.welcome()
     end
     puts "choose what to update"
     puts "type either bpm, key, artist, or title"
-    choice = clean_gets
+    choice = STDIN.gets.chomp
     case choice
     when "bpm"
       puts "enter bpm"
-      bpm = clean_gets
+      bpm = STDIN.gets.chomp
       song.update(bpm: bpm)
     when "key"
       puts "enter key"
-      key = clean_gets
+      key = STDIN.gets.chomp
       song.update(key: key)
     when "artist"
       puts "enter artist"
-      artist = clean_gets
+      artist = STDIN.gets.chomp
       song.update(artist: artist)
     when "title"
       puts "enter song title"
-      title = clean_gets
+      title = STDIN.gets.chomp
       song.update(song: title)
     else
       puts "#{choice} isn't a valid choice. try again? y/n"
-      response = clean_gets
+      response = STDIN.gets.chomp
       response == "y" ? update() : SongsController.welcome()
     end
     puts "update more properties? y/n"
-    answer = clean_gets
+    answer = STDIN.gets.chomp
     answer == "y" ? update() : SongsController.welcome()
   end
 
   def self.delete
     puts "type name of song to delete"
-    name = clean_gets
+    name = STDIN.gets.chomp
     song = Song.find_by(title: name)
     if song
       puts "#{song.bpm} #{song.key} #{song.artist} #{song.title}"
@@ -99,7 +99,7 @@ class SongsController
       puts "can not find #{name}"
     end
     puts "Delete #{song.title}? y/n"
-    choice = clean_gets
+    choice = STDIN.gets.chomp
     if choice == "y"
       song.destroy
       puts "#{name} deleted"
@@ -111,7 +111,7 @@ class SongsController
 
   def self.search
     puts "type 'bpm;lowbpm;highbpm', 'key;lowbpm;highbpm;key', 'artist;artistname', 'song;songname', or 'exit'"
-    input = clean_gets.split(";")
+    input = STDIN.gets.chomp.split(";")
     case input[0]
       when "bpm"
         SongsController.bpm(input[1], input[2])
@@ -151,10 +151,10 @@ class SongsController
       tp results
     else
       puts "couldn't find #{song}. do you want to add it to missing? y/n"
-      response = clean_gets
+      response = STDIN.gets.chomp
       if response == "y"
         puts "enter artist"
-        artist = clean_gets
+        artist = STDIN.gets.chomp
         Missing_Song.create(title: song, artist: artist)
         puts "#{song} by #{artist} added to missing songs"
       else
@@ -178,7 +178,7 @@ def self.transpose(id)
     i = array.index(key)
   end
     puts "transpose up or down?"
-    direction = clean_gets
+    direction = STDIN.gets.chomp
     lowbpm = 0
     highbpm = 0
   if direction == "up"
@@ -198,7 +198,7 @@ def self.transpose(id)
     SongsController.welcome()
   end
   puts "transpose again? y/n"
-  response = clean_gets
+  response = STDIN.gets.chomp
   if response == "y"
     transpose(id)
   else
@@ -209,27 +209,27 @@ end
   def self.add_to_playlist(id)
     tp Playlist.all
     puts "enter playlist id"
-    playlistid = clean_gets.to_i
+    playlistid = STDIN.gets.chomp.to_i
     if Playlist.where(id: playlistid).exists?
       Join.create(songs_id: id, playlists_id: playlistid)
       song = Song.find_by(id: id)
       playlist = Playlist.find_by(id: playlistid)
       puts "#{song.title} added to #{playlist.playlistname}"
       puts "add more? y/n"
-      answer = clean_gets
+      answer = STDIN.gets.chomp
       if answer == "y"
         puts "enter song id"
-        songid = clean_gets.to_i
+        songid = STDIN.gets.chomp.to_i
         SongsController.add_to_playlist(songid)
       else
         SongsController.welcome()
       end
     else
       puts "no playlist #{id}. Do you want to make one? y/n"
-      response = clean_gets
+      response = STDIN.gets.chomp
       if response == "y"
         puts "enter playlist name"
-        playlistname = clean_gets
+        playlistname = STDIN.gets.chomp
         Playlist.create(playlistname: playlistname)
         puts "#{playlistname} created"
         SongsController.welcome()

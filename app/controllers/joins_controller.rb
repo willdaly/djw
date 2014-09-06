@@ -23,8 +23,8 @@ class JoinsController
       song = Song.find_by(id: join.songs_id)
       puts "#{join.playorder}. #{song.bpm} #{song.key} #{song.title} #{song.artist} #{join.id}"
     end
-    puts "type order-id-playorder, remove-id, or main menu"
-    input = clean_gets.split("-")
+    puts "type order;id;playorder, remove;id, or main menu"
+    input = STDIN.gets.chomp.split(";")
     case input[0]
       when "order"
         JoinsController.order(input[1], input[2])

@@ -3,7 +3,7 @@ class MissingSongsController
   def self.welcome
     tp Missing_Song.all
     puts "type report-missing song name, complete-id, delete-id, main menu, or exit"
-    input = clean_gets.split("-")
+    input = STDIN.gets.chomp.split("-")
     case input[0]
     when "report"
         MissingSongsController.add(input[1])
@@ -18,7 +18,7 @@ class MissingSongsController
 
   def self.add(title)
     puts "enter artist"
-    artist = clean_gets
+    artist = STDIN.gets.chomp
     created = Missing_Song.create(title: title, artist: artist)
     puts "#{created.title} by #{created.artist} reported missing"
     MissingSongsController.welcome()
@@ -29,20 +29,20 @@ class MissingSongsController
     if Missing_Song.where(id: id).exists?
       puts "#{song.artist} #{song.title}"
       puts "enter bpm"
-      bpm = clean_gets
+      bpm = STDIN.gets.chomp
       puts "enter key"
-      key = clean_gets
+      key = STDIN.gets.chomp
       puts "enter secondary key, if applicable"
-      key2 = clean_gets
+      key2 = STDIN.gets.chomp
       puts "enter bside bpm, if applicable"
-      bside = clean_gets
+      bside = STDIN.gets.chomp
       Song.create(title: song.title, bpm: bpm, key: key, artist: song.artist, key2: key2, bside: bside)
       song.destroy
       puts "#{song.title} by #{song.artist} added to songs and removed from missing songs"
       MissingSongsController.welcome()
     else
       puts "can't find #{title}. Do you want to report it missing? y/n"
-      response = clean_gets
+      response = STDIN.gets.chomp
       if response == "y"
         Song.add()
       else
@@ -60,7 +60,7 @@ class MissingSongsController
       MissingSongsController.welcome()
     end
     puts "Delete #{song.title}? y/n"
-    choice = clean_gets
+    choice = STDIN.gets.chomp
     if choice == "y"
       song.destroy
       MissingSongsController.welcome()

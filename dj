@@ -5,9 +5,13 @@ Environment.environment = ENV["DB"] || "development"
 
 require_relative 'lib/router'
 
-def clean_gets
-  (gets || "").chomp
+ARGV
+case ARGV.length
+  when 1
+  when 2
+  when 3
+    SongsController.key(ARGV[0], ARGV[1], ARGV[2])
+  else
+    puts "welcome to dj list"
+    Router.welcome()
 end
-
-puts "welcome to dj list"
-Router.welcome()

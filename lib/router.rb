@@ -2,12 +2,12 @@ class Router
 
   def self.welcome
     puts "type songs, search, missing, or playlist"
-    choice = clean_gets
+    choice = STDIN.gets.chomp
     case choice
       when "songs"
         SongsController.welcome()
       when "search"
-        SongsController.search()  
+        SongsController.search()
       when "missing"
         MissingSongsController.welcome()
       when "playlist"
